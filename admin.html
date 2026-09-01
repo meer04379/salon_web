@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin & Staff Portal | Serene Sanctuary Salon & Spa</title>
+  <meta name="description" content="Management portal for salon staff: live bookings, appointment calendar, service catalog CRUD, stylist availability and revenue analytics." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            roseGold: {
+              50: '#FDF9F7',
+              100: '#F7EDE8',
+              200: '#EED8CF',
+              300: '#DCB8AA',
+              400: '#C59B8E',
+              500: '#B38577',
+              600: '#99685B',
+              700: '#7A4E43',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="min-h-screen flex flex-col antialiased bg-stone-100/70 text-stone-800">
+
+  <!-- ========================================================================= -->
+  <!-- 1. AUTHENTICATION / LOGIN SCREEN -->
+  <!-- ========================================================================= -->
+  <div id="admin-auth-view" class="min-h-screen flex items-center justify-center p-4 bg-[#FAF7F5]">
+    <div class="max-w-md w-full bg-white rounded-3xl p-8 sm:p-10 border border-stone-200/80 shadow-2xl">
+      
+      <div class="text-center mb-8">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-[#C59B8E] to-[#FAF7F5] flex items-center justify-center text-stone-900 font-serif text-2xl font-bold mx-auto mb-3 shadow-sm">
+          S
+        </div>
+        <h1 class="font-serif text-2xl font-bold text-stone-900">Serene Sanctuary</h1>
+        <p class="text-xs text-stone-500 mt-1 uppercase tracking-wider font-semibold">Salon & Spa Staff Management</p>
+      </div>
+
+      <form id="admin-login-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1.5">Staff Email</label>
+          <input 
+            type="email" 
+            id="login-email" 
+            required 
+            placeholder="admin@serenesalon.pk"
+            class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#C59B8E]/50 text-sm"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1.5">Password</label>
+          <input 
+            type="password" 
+            id="login-password" 
+            required 
+            placeholder="••••••••"
+            class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#C59B8E]/50 text-sm"
+          />
+        </div>
+
+        <button 
+          id="login-btn"
+          type="submit" 
+          class="w-full btn-primary py-3.5 rounded-xl text-xs uppercase tracking-wider font-semibold text-center mt-2 shadow-md shadow-rose-900/10"
+        >
+          Access Portal →
+        </button>
+      </form>
+
+      <!-- Instant Demo Unlock -->
+      <div class="mt-6 pt-6 border-t border-stone-100 text-center">
+        <p class="text-xs text-stone-500 mb-2">Testing before Supabase setup?</p>
+        <button 
+          type="button" 
+          onclick="loginDemoMode()" 
+          class="w-full py-2.5 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold transition-all"
+        >
+          ⚡ 1-Click Demo Login (Instant Preview)
+        </button>
+      </div>
+
+      <div class="mt-6 text-center">
+        <a href="index.html" class="text-xs font-medium text-[#99685B] hover:underline">← Back to Customer Website</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. AUTHENTICATED ADMIN DASHBOARD VIEW -->
+  <!-- ========================================================================= -->
+  <div id="admin-dashboard-view" class="min-h-screen flex flex-col hidden">
+    
+    <!-- Top Admin Header -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
+        <div class="flex items-center gap-4">
+          <a href="index.html" class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-[#C59B8E] text-white flex items-center justify-center font-serif font-bold text-sm">
+              S
+            </div>
+            <span class="font-serif font-bold text-stone-900 text-lg hidden sm:inline">Serene Sanctuary Admin</span>
+          </a>
+          <span class="px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-600 text-[11px] font-semibold border border-stone-200">
+            Karachi Branch
+          </span>
+        </div>
+
+        <div class="flex items-center gap-4 text-xs">
+          <span id="admin-user-email" class="text-stone-500 hidden sm:inline font-medium"></span>
+          <a href="index.html" target="_blank" class="text-stone-600 hover:text-stone-900 font-medium">
+            View Live Site ↗
+          </a>
+          <button 
+            onclick="handleLogout()" 
+            class="px-3.5 py-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 font-semibold"
+          >
+            Sign Out
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 flex flex-col">
+      
+      <!-- NAV TABS -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 border-b border-stone-200 no-scrollbar">
+        <button id="tab-btn-dashboard" onclick="switchAdminTab('dashboard')" class="admin-tab-btn active px-4 py-2.5 rounded-xl font-semibold text-sm bg-[#C59B8E] text-white shadow-sm flex items-center gap-2">
+          <span>📊</span> Dashboard
+        </button>
+        <button id="tab-btn-bookings" onclick="switchAdminTab('bookings')" class="admin-tab-btn px-4 py-2.5 rounded-xl font-medium text-sm text-stone-600 hover:bg-[#F7EDE8] hover:text-[#99685B] flex items-center gap-2">
+          <span>📅</span> Appointments
+        </button>
+        <button id="tab-btn-services" onclick="switchAdminTab('services')" class="admin-tab-btn px-4 py-2.5 rounded-xl font-medium text-sm text-stone-600 hover:bg-[#F7EDE8] hover:text-[#99685B] flex items-center gap-2">
+          <span>✂️</span> Treatments (CRUD)
+        </button>
+        <button id="tab-btn-staff" onclick="switchAdminTab('staff')" class="admin-tab-btn px-4 py-2.5 rounded-xl font-medium text-sm text-stone-600 hover:bg-[#F7EDE8] hover:text-[#99685B] flex items-center gap-2">
+          <span>👥</span> Specialists
+        </button>
+        <button id="tab-btn-settings" onclick="switchAdminTab('settings')" class="admin-tab-btn px-4 py-2.5 rounded-xl font-medium text-sm text-stone-600 hover:bg-[#F7EDE8] hover:text-[#99685B] flex items-center gap-2">
+          <span>⚙️</span> Salon Settings
+        </button>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 1: DASHBOARD OVERVIEW -->
+      <!-- ===================================================================== -->
+      <div id="tab-content-dashboard" class="space-y-8">
+        
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+            <div class="flex items-center justify-between text-xs text-stone-500 font-semibold mb-2">
+              <span>TODAY'S APPOINTMENTS</span>
+              <span class="text-base">📅</span>
+            </div>
+            <div id="stat-today-count" class="font-serif text-3xl font-bold text-stone-900">0</div>
+            <span class="text-[11px] text-stone-400 mt-1 block">Scheduled for today</span>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+            <div class="flex items-center justify-between text-xs text-stone-500 font-semibold mb-2">
+              <span>TOTAL REVENUE (EST.)</span>
+              <span class="text-base">💵</span>
+            </div>
+            <div id="stat-revenue-total" class="font-serif text-3xl font-bold text-emerald-700">Rs. 0</div>
+            <span class="text-[11px] text-stone-400 mt-1 block">From confirmed bookings</span>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+            <div class="flex items-center justify-between text-xs text-stone-500 font-semibold mb-2">
+              <span>ACTIVE SERVICES</span>
+              <span class="text-base">✂️</span>
+            </div>
+            <div id="stat-services-count" class="font-serif text-3xl font-bold text-stone-900">0</div>
+            <span class="text-[11px] text-stone-400 mt-1 block">Available in catalog</span>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+            <div class="flex items-center justify-between text-xs text-stone-500 font-semibold mb-2">
+              <span>ACTIVE SPECIALISTS</span>
+              <span class="text-base">👥</span>
+            </div>
+            <div id="stat-staff-count" class="font-serif text-3xl font-bold text-stone-900">0</div>
+            <span class="text-[11px] text-stone-400 mt-1 block">On active duty</span>
+          </div>
+        </div>
+
+        <!-- Recent Bookings Feed Widget -->
+        <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-serif font-bold text-xl text-stone-900">Recent Appointments</h3>
+              <p class="text-xs text-stone-500">Real-time incoming reservations</p>
+            </div>
+            <button onclick="switchAdminTab('bookings')" class="text-xs font-semibold text-[#99685B] hover:underline">
+              View All Bookings →
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-stone-200 text-xs font-semibold text-stone-400 uppercase tracking-wider">
+                  <th class="py-3 px-4">Ref Code</th>
+                  <th class="py-3 px-4">Client</th>
+                  <th class="py-3 px-4">Service</th>
+                  <th class="py-3 px-4">Date & Time</th>
+                  <th class="py-3 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-recent-bookings">
+                <!-- Populated by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 2: BOOKINGS MANAGEMENT -->
+      <!-- ===================================================================== -->
+      <div id="tab-content-bookings" class="space-y-6 hidden">
+        
+        <!-- Filters Header -->
+        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+          
+          <!-- Status Pills -->
+          <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto">
+            <button data-status="all" onclick="filterBookings('all')" class="booking-filter-pill px-4 py-1.5 rounded-full text-xs font-semibold bg-[#C59B8E] text-white">
+              All
+            </button>
+            <button data-status="confirmed" onclick="filterBookings('confirmed')" class="booking-filter-pill px-4 py-1.5 rounded-full text-xs font-medium bg-white text-stone-600 border border-stone-200 hover:bg-stone-50">
+              Confirmed
+            </button>
+            <button data-status="pending" onclick="filterBookings('pending')" class="booking-filter-pill px-4 py-1.5 rounded-full text-xs font-medium bg-white text-stone-600 border border-stone-200 hover:bg-stone-50">
+              Pending
+            </button>
+            <button data-status="completed" onclick="filterBookings('completed')" class="booking-filter-pill px-4 py-1.5 rounded-full text-xs font-medium bg-white text-stone-600 border border-stone-200 hover:bg-stone-50">
+              Completed
+            </button>
+            <button data-status="cancelled" onclick="filterBookings('cancelled')" class="booking-filter-pill px-4 py-1.5 rounded-full text-xs font-medium bg-white text-stone-600 border border-stone-200 hover:bg-stone-50">
+              Cancelled
+            </button>
+          </div>
+
+          <!-- Date & Search Filter -->
+          <div class="flex items-center gap-3 w-full md:w-auto">
+            <input 
+              type="date" 
+              id="admin-filter-date" 
+              onchange="handleBookingDateFilter(event)"
+              class="px-3 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#C59B8E]/50"
+            />
+            <input 
+              type="text" 
+              id="admin-search-bookings" 
+              oninput="handleBookingSearch(event)"
+              placeholder="Search by client or ref..."
+              class="px-3 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#C59B8E]/50 w-44 sm:w-56"
+            />
+          </div>
+
+        </div>
+
+        <!-- Bookings Master Table -->
+        <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-[#FAF7F5] border-b border-stone-200 text-xs font-semibold text-stone-500 uppercase tracking-wider">
+                  <th class="py-3.5 px-4">Ref</th>
+                  <th class="py-3.5 px-4">Customer Details</th>
+                  <th class="py-3.5 px-4">Treatment</th>
+                  <th class="py-3.5 px-4">Specialist</th>
+                  <th class="py-3.5 px-4">Schedule</th>
+                  <th class="py-3.5 px-4">Status</th>
+                  <th class="py-3.5 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-bookings-tbody">
+                <!-- Populated by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 3: SERVICES CRUD -->
+      <!-- ===================================================================== -->
+      <div id="tab-content-services" class="space-y-6 hidden">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-serif font-bold text-xl text-stone-900">Treatment Catalog</h3>
+            <p class="text-xs text-stone-500">Manage services, descriptions, duration and prices (PKR)</p>
+          </div>
+          <button onclick="openAddServiceModal()" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center gap-2">
+            <span>+ Add New Treatment</span>
+          </button>
+        </div>
+
+        <!-- Services Table -->
+        <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-[#FAF7F5] border-b border-stone-200 text-xs font-semibold text-stone-500 uppercase tracking-wider">
+                  <th class="py-3.5 px-4">Treatment Name</th>
+                  <th class="py-3.5 px-4">Category</th>
+                  <th class="py-3.5 px-4">Price (PKR)</th>
+                  <th class="py-3.5 px-4">Duration</th>
+                  <th class="py-3.5 px-4">Status</th>
+                  <th class="py-3.5 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-services-tbody">
+                <!-- Populated by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 4: STAFF MANAGEMENT -->
+      <!-- ===================================================================== -->
+      <div id="tab-content-staff" class="space-y-6 hidden">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-serif font-bold text-xl text-stone-900">Stylists & Specialists</h3>
+            <p class="text-xs text-stone-500">Manage team members, roles and booking assignments</p>
+          </div>
+          <button onclick="openAddStaffModal()" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center gap-2">
+            <span>+ Add Team Member</span>
+          </button>
+        </div>
+
+        <div id="admin-staff-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Populated by admin.js -->
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 5: SALON SETTINGS -->
+      <!-- ===================================================================== -->
+      <div id="tab-content-settings" class="space-y-6 hidden max-w-3xl">
+        
+        <div>
+          <h3 class="font-serif font-bold text-xl text-stone-900">Salon Configuration</h3>
+          <p class="text-xs text-stone-500">Update salon hours, location in Karachi, and booking parameters</p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl border border-stone-200 shadow-sm">
+          <form id="salon-settings-form" class="space-y-6">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">Salon Name</label>
+                <input type="text" id="set-salon-name" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">Tagline</label>
+                <input type="text" id="set-tagline" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">Contact Phone</label>
+                <input type="text" id="set-phone" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">WhatsApp Number</label>
+                <input type="text" id="set-whatsapp" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-stone-700 mb-1.5">Address (Karachi)</label>
+              <input type="text" id="set-address" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-4 border-t border-stone-100">
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">Opening Time</label>
+                <input type="time" id="set-open-time" class="w-full px-3 py-2 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">Closing Time</label>
+                <input type="time" id="set-close-time" class="w-full px-3 py-2 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">Slot Interval (Mins)</label>
+                <input type="number" id="set-interval" class="w-full px-3 py-2 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">Buffer Gap (Mins)</label>
+                <input type="number" id="set-buffer" class="w-full px-3 py-2 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+              </div>
+            </div>
+
+            <div class="pt-4 flex justify-end">
+              <button type="submit" class="btn-primary px-8 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider">
+                Save Salon Settings
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: ADD / EDIT SERVICE -->
+  <!-- ========================================================================= -->
+  <div id="service-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between pb-4 border-b border-stone-100">
+        <h3 id="service-modal-title" class="font-serif font-bold text-xl text-stone-900">Add New Treatment</h3>
+        <button onclick="closeServiceModal()" class="p-2 text-stone-400 hover:text-stone-700 text-lg font-bold">✕</button>
+      </div>
+
+      <form id="service-modal-form" class="mt-6 space-y-4">
+        <input type="hidden" id="service-modal-id" />
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Treatment Name *</label>
+          <input type="text" id="service-name-input" required class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-stone-700 mb-1">Category *</label>
+            <select id="service-category-input" required class="w-full px-3 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-stone-700 mb-1">Price (PKR) *</label>
+            <input type="number" id="service-price-input" required min="0" step="100" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-stone-700 mb-1">Duration (Minutes) *</label>
+            <input type="number" id="service-duration-input" required min="15" step="15" value="45" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-stone-700 mb-1">Image URL</label>
+            <input type="url" id="service-image-input" placeholder="https://images.unsplash..." class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Description</label>
+          <textarea id="service-description-input" rows="2" class="w-full px-4 py-2 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <input type="checkbox" id="service-popular-input" class="rounded text-[#C59B8E] focus:ring-[#C59B8E]" />
+          <label for="service-popular-input" class="text-xs text-stone-700 font-medium">Feature as "Popular Ritual" on homepage</label>
+        </div>
+
+        <div class="pt-4 border-t border-stone-100 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeServiceModal()" class="px-5 py-2.5 rounded-xl bg-stone-100 text-stone-600 text-xs font-semibold hover:bg-stone-200">Cancel</button>
+          <button type="submit" class="btn-primary px-6 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider">Save Treatment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: ADD / EDIT STAFF -->
+  <!-- ========================================================================= -->
+  <div id="staff-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between pb-4 border-b border-stone-100">
+        <h3 id="staff-modal-title" class="font-serif font-bold text-xl text-stone-900">Add Team Member</h3>
+        <button onclick="closeStaffModal()" class="p-2 text-stone-400 hover:text-stone-700 text-lg font-bold">✕</button>
+      </div>
+
+      <form id="staff-modal-form" class="mt-6 space-y-4">
+        <input type="hidden" id="staff-modal-id" />
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Specialist Name *</label>
+          <input type="text" id="staff-name-input" required class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Role / Designation *</label>
+          <input type="text" id="staff-role-input" required placeholder="e.g. Master Hair Stylist" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Specialties</label>
+          <input type="text" id="staff-specialties-input" placeholder="e.g. Balayage, Keratin, Bridal" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Avatar / Photo URL</label>
+          <input type="url" id="staff-avatar-input" placeholder="https://images.unsplash..." class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Bio / Profile Summary</label>
+          <textarea id="staff-bio-input" rows="2" class="w-full px-4 py-2 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-[#C59B8E]/50 focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <input type="checkbox" id="staff-active-input" checked class="rounded text-[#C59B8E] focus:ring-[#C59B8E]" />
+          <label for="staff-active-input" class="text-xs text-stone-700 font-medium">Currently active & available for bookings</label>
+        </div>
+
+        <div class="pt-4 border-t border-stone-100 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeStaffModal()" class="px-5 py-2.5 rounded-xl bg-stone-100 text-stone-600 text-xs font-semibold hover:bg-stone-200">Cancel</button>
+          <button type="submit" class="btn-primary px-6 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider">Save Specialist</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/supabase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

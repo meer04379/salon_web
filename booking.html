@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book an Appointment | Serene Sanctuary Salon & Spa Karachi</title>
+  <meta name="description" content="Schedule your beauty and spa treatments in Karachi online. Select your preferred stylist, date, and conflict-free available time slot in real-time." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            roseGold: {
+              50: '#FDF9F7',
+              100: '#F7EDE8',
+              200: '#EED8CF',
+              300: '#DCB8AA',
+              400: '#C59B8E',
+              500: '#B38577',
+              600: '#99685B',
+              700: '#7A4E43',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="min-h-screen flex flex-col antialiased bg-[#FAF7F5]">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#C59B8E] to-[#FAF7F5] flex items-center justify-center text-stone-900 font-serif text-xl font-bold shadow-sm group-hover:scale-105 transition-transform">
+          S
+        </div>
+        <div>
+          <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-stone-900 block leading-tight">Serene Sanctuary</span>
+          <span class="text-[10px] tracking-[0.2em] text-[#99685B] uppercase font-semibold">Salon & Luxury Spa • Karachi</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-700">
+        <a href="index.html" class="hover:text-[#99685B] transition-colors">Home</a>
+        <a href="services.html" class="hover:text-[#99685B] transition-colors">Services & Menu</a>
+        <a href="booking.html" class="text-[#99685B] font-semibold">Book Online</a>
+        <a href="gallery.html" class="hover:text-[#99685B] transition-colors">Gallery</a>
+        <a href="admin.html" class="hover:text-[#99685B] transition-colors text-xs text-stone-400 hover:text-stone-700">Staff Portal</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button onclick="openWhatsApp()" class="hidden sm:inline-flex btn-secondary px-5 py-2 rounded-full text-xs font-medium items-center gap-1.5">
+          <span>💬</span> Help & Questions
+        </button>
+
+        <button 
+          id="mobile-menu-btn" 
+          type="button" 
+          aria-label="Open Mobile Menu"
+          class="md:hidden p-2 rounded-xl text-stone-700 hover:bg-stone-100 focus:outline-none"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU DRAWER -->
+  <div id="mobile-menu" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex justify-end">
+    <div class="w-4/5 max-w-sm bg-[#FAF7F5] h-full p-6 flex flex-col justify-between shadow-2xl">
+      <div>
+        <div class="flex items-center justify-between pb-6 border-b border-stone-200">
+          <div class="font-serif font-bold text-xl text-stone-900">Serene Sanctuary</div>
+          <button id="mobile-menu-close" class="p-2 text-stone-500 hover:text-stone-900 text-xl font-bold">✕</button>
+        </div>
+        <nav class="mt-8 flex flex-col gap-5 text-base font-medium text-stone-800">
+          <a href="index.html" class="hover:text-[#99685B]">Home</a>
+          <a href="services.html" class="hover:text-[#99685B]">Services & Menu</a>
+          <a href="booking.html" class="text-[#99685B] font-semibold">Book Appointment</a>
+          <a href="gallery.html" class="hover:text-[#99685B]">Visual Gallery</a>
+          <a href="admin.html" class="text-stone-500 hover:text-stone-900 text-sm mt-4 pt-4 border-t border-stone-200">Admin Portal</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKING WIZARD MAIN CONTAINER -->
+  <main class="flex-1 py-10 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- TITLE & SUBTITLE -->
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full badge-luxury text-xs font-semibold uppercase tracking-wider mb-3">
+          <span>📅</span> Seamless Scheduling
+        </span>
+        <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold text-stone-900">
+          Reserve Your Treatment
+        </h1>
+        <p class="text-stone-500 text-xs sm:text-sm mt-2">
+          Select your desired treatment, preferred specialist, and available slot in our Karachi sanctuary.
+        </p>
+      </div>
+
+      <!-- STEP PROGRESS INDICATOR -->
+      <div class="max-w-3xl mx-auto mb-12 px-2">
+        <div class="flex items-center justify-between">
+          
+          <div class="flex flex-col items-center gap-1.5">
+            <div id="step-dot-1" class="step-dot active">1</div>
+            <span class="text-[11px] font-semibold text-stone-700">Treatment</span>
+          </div>
+
+          <div id="step-line-1" class="step-line"></div>
+
+          <div class="flex flex-col items-center gap-1.5">
+            <div id="step-dot-2" class="step-dot">2</div>
+            <span class="text-[11px] font-semibold text-stone-700">Specialist</span>
+          </div>
+
+          <div id="step-line-2" class="step-line"></div>
+
+          <div class="flex flex-col items-center gap-1.5">
+            <div id="step-dot-3" class="step-dot">3</div>
+            <span class="text-[11px] font-semibold text-stone-700">Date</span>
+          </div>
+
+          <div id="step-line-3" class="step-line"></div>
+
+          <div class="flex flex-col items-center gap-1.5">
+            <div id="step-dot-4" class="step-dot">4</div>
+            <span class="text-[11px] font-semibold text-stone-700">Time Slot</span>
+          </div>
+
+          <div id="step-line-4" class="step-line"></div>
+
+          <div class="flex flex-col items-center gap-1.5">
+            <div id="step-dot-5" class="step-dot">5</div>
+            <span class="text-[11px] font-semibold text-stone-700">Details</span>
+          </div>
+
+          <div id="step-line-5" class="step-line"></div>
+
+          <div class="flex flex-col items-center gap-1.5">
+            <div id="step-dot-6" class="step-dot">6</div>
+            <span class="text-[11px] font-semibold text-stone-700">Confirmed</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- MAIN WIZARD GRID -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start max-w-6xl mx-auto">
+        
+        <!-- LEFT WIZARD PANELS (2 COLS) -->
+        <div class="lg:col-span-2 space-y-6">
+
+          <!-- ========================================== -->
+          <!-- STEP 1: SERVICE SELECTION -->
+          <!-- ========================================== -->
+          <div id="step-panel-1" class="bg-white p-6 sm:p-8 rounded-3xl border border-stone-200/80 shadow-soft">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h2 class="font-serif text-2xl font-bold text-stone-900">1. Select Your Service</h2>
+                <p class="text-xs text-stone-500 mt-0.5">Choose the primary ritual or makeover for your visit.</p>
+              </div>
+              <a href="services.html" class="text-xs font-semibold text-[#99685B] hover:underline">View Full Menu ↗</a>
+            </div>
+
+            <div id="step1-services-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+              <!-- Rendered by booking.js -->
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-stone-100 flex justify-end">
+              <button 
+                type="button" 
+                onclick="goToStep(2)"
+                class="btn-primary px-8 py-3 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center gap-2"
+              >
+                <span>Continue to Specialist</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- STEP 2: STAFF SELECTION -->
+          <!-- ========================================== -->
+          <div id="step-panel-2" class="bg-white p-6 sm:p-8 rounded-3xl border border-stone-200/80 shadow-soft hidden">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h2 class="font-serif text-2xl font-bold text-stone-900">2. Select Your Specialist</h2>
+                <p class="text-xs text-stone-500 mt-0.5">Select a master stylist or allow any available specialist to serve you.</p>
+              </div>
+            </div>
+
+            <div id="step2-staff-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Rendered by booking.js -->
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-stone-100 flex items-center justify-between">
+              <button 
+                type="button" 
+                onclick="goToStep(1)" 
+                class="btn-secondary px-6 py-3 rounded-full text-xs font-semibold text-stone-600"
+              >
+                ← Back
+              </button>
+              <button 
+                type="button" 
+                onclick="goToStep(3)"
+                class="btn-primary px-8 py-3 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center gap-2"
+              >
+                <span>Select Appointment Date</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- STEP 3: DATEPICKER CALENDAR -->
+          <!-- ========================================== -->
+          <div id="step-panel-3" class="bg-white p-6 sm:p-8 rounded-3xl border border-stone-200/80 shadow-soft hidden">
+            <div class="mb-6">
+              <h2 class="font-serif text-2xl font-bold text-stone-900">3. Pick a Date</h2>
+              <p class="text-xs text-stone-500 mt-0.5">Choose your preferred day for the visit (Open 7 days a week).</p>
+            </div>
+
+            <!-- Custom Calendar Widget -->
+            <div class="max-w-md mx-auto bg-[#FAF7F5] p-6 rounded-3xl border border-stone-200">
+              
+              <!-- Month Header Navigation -->
+              <div class="flex items-center justify-between mb-6">
+                <button 
+                  type="button" 
+                  onclick="prevMonth()" 
+                  class="w-9 h-9 rounded-full bg-white border border-stone-200 flex items-center justify-center text-stone-700 hover:bg-stone-100 font-bold"
+                >
+                  ‹
+                </button>
+                <h3 id="calendar-month-title" class="font-serif text-xl font-bold text-stone-900">
+                  Month Year
+                </h3>
+                <button 
+                  type="button" 
+                  onclick="nextMonth()" 
+                  class="w-9 h-9 rounded-full bg-white border border-stone-200 flex items-center justify-center text-stone-700 hover:bg-stone-100 font-bold"
+                >
+                  ›
+                </button>
+              </div>
+
+              <!-- Day Names -->
+              <div class="grid grid-cols-7 gap-2 text-center text-xs font-semibold text-stone-400 uppercase tracking-wider mb-3">
+                <span>Su</span>
+                <span>Mo</span>
+                <span>Tu</span>
+                <span>We</span>
+                <span>Th</span>
+                <span>Fr</span>
+                <span>Sa</span>
+              </div>
+
+              <!-- Days Grid -->
+              <div id="calendar-days-grid" class="grid grid-cols-7 gap-2 text-center">
+                <!-- Rendered by booking.js -->
+              </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-stone-100 flex items-center justify-between">
+              <button 
+                type="button" 
+                onclick="goToStep(2)" 
+                class="btn-secondary px-6 py-3 rounded-full text-xs font-semibold text-stone-600"
+              >
+                ← Back
+              </button>
+              <button 
+                type="button" 
+                onclick="goToStep(4)"
+                class="btn-primary px-8 py-3 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center gap-2"
+              >
+                <span>Continue to Slots</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- STEP 4: TIME SLOT SELECTION -->
+          <!-- ========================================== -->
+          <div id="step-panel-4" class="bg-white p-6 sm:p-8 rounded-3xl border border-stone-200/80 shadow-soft hidden">
+            <div class="mb-6">
+              <h2 class="font-serif text-2xl font-bold text-stone-900">4. Choose an Available Slot</h2>
+              <p class="text-xs text-stone-500 mt-0.5">
+                Showing live open slots for <span id="selected-date-display" class="font-semibold text-stone-800"></span>.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-4 text-xs mb-4 text-stone-500">
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-white border border-stone-300"></span> Available</span>
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#C59B8E]"></span> Selected</span>
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-stone-300"></span> Booked</span>
+            </div>
+
+            <div id="step4-slots-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-h-[380px] overflow-y-auto pr-1">
+              <!-- Rendered by booking.js -->
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-stone-100 flex items-center justify-between">
+              <button 
+                type="button" 
+                onclick="goToStep(3)" 
+                class="btn-secondary px-6 py-3 rounded-full text-xs font-semibold text-stone-600"
+              >
+                ← Back to Date
+              </button>
+              <button 
+                type="button" 
+                onclick="goToStep(5)"
+                class="btn-primary px-8 py-3 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center gap-2"
+              >
+                <span>Enter Contact Details</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- STEP 5: CLIENT CONTACT & REVIEW -->
+          <!-- ========================================== -->
+          <div id="step-panel-5" class="bg-white p-6 sm:p-8 rounded-3xl border border-stone-200/80 shadow-soft hidden">
+            <div class="mb-6">
+              <h2 class="font-serif text-2xl font-bold text-stone-900">5. Client Information & Review</h2>
+              <p class="text-xs text-stone-500 mt-0.5">Please provide your contact details for appointment confirmation.</p>
+            </div>
+
+            <!-- Booking Breakdown Review Card -->
+            <div class="bg-[#FAF7F5] p-5 rounded-2xl border border-stone-200 mb-6 space-y-2 text-xs text-stone-700">
+              <div class="flex justify-between font-medium">
+                <span class="text-stone-400">Treatment:</span>
+                <span id="review-service-name" class="font-semibold text-stone-900"></span>
+              </div>
+              <div id="review-service-details" class="text-[11px] text-stone-500"></div>
+              <div class="flex justify-between font-medium pt-2 border-t border-stone-200/60">
+                <span class="text-stone-400">Specialist:</span>
+                <span id="review-staff-name" class="font-semibold text-stone-900"></span>
+              </div>
+              <div class="flex justify-between font-medium">
+                <span class="text-stone-400">Date & Time:</span>
+                <span id="review-date-time" class="font-semibold text-stone-900"></span>
+              </div>
+              <div class="flex justify-between font-bold text-sm pt-2 border-t border-stone-200 text-stone-900">
+                <span>Total Due at Salon (PKR):</span>
+                <span id="review-total-price" class="text-[#99685B]"></span>
+              </div>
+            </div>
+
+            <!-- Client Form -->
+            <form onsubmit="submitBookingForm(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">Full Name *</label>
+                <input 
+                  type="text" 
+                  id="customer-name" 
+                  required 
+                  placeholder="e.g. Ayesha Siddiqui"
+                  class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#C59B8E]/50 text-sm"
+                />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">Mobile Number (Karachi) *</label>
+                  <input 
+                    type="tel" 
+                    id="customer-phone" 
+                    required 
+                    placeholder="0300-1234567"
+                    class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#C59B8E]/50 text-sm font-mono"
+                  />
+                  <span class="text-[10px] text-stone-400 mt-1 block">We'll send booking reminders via WhatsApp/SMS</span>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">Email Address (Optional)</label>
+                  <input 
+                    type="email" 
+                    id="customer-email" 
+                    placeholder="ayesha@example.com"
+                    class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#C59B8E]/50 text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">Special Requests / Allergies (Optional)</label>
+                <textarea 
+                  id="customer-notes" 
+                  rows="2" 
+                  placeholder="Any hair color history, sensitive skin allergies, or specific requests..."
+                  class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#C59B8E]/50 text-sm"
+                ></textarea>
+              </div>
+
+              <div class="pt-6 border-t border-stone-100 flex items-center justify-between">
+                <button 
+                  type="button" 
+                  onclick="goToStep(4)" 
+                  class="btn-secondary px-6 py-3 rounded-full text-xs font-semibold text-stone-600"
+                >
+                  ← Back to Slots
+                </button>
+                <button 
+                  id="confirm-booking-btn"
+                  type="submit"
+                  class="btn-primary px-8 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider shadow-lg shadow-rose-900/15 flex items-center gap-2"
+                >
+                  <span>Confirm & Book Appointment</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- STEP 6: CONFIRMATION & CALENDAR RECEIPT -->
+          <!-- ========================================== -->
+          <div id="step-panel-6" class="bg-white p-6 sm:p-10 rounded-3xl border border-stone-200/80 shadow-soft text-center hidden">
+            <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">
+              ✓
+            </div>
+
+            <span class="text-xs uppercase font-bold tracking-[0.2em] text-emerald-600">Booking Confirmed</span>
+            <h2 class="font-serif text-3xl sm:text-4xl font-semibold text-stone-900 mt-1 mb-2">
+              We Look Forward to Welcoming You!
+            </h2>
+            <p class="text-stone-500 text-xs sm:text-sm max-w-md mx-auto mb-8">
+              Your appointment has been reserved in our system. You can save this to your calendar or share via WhatsApp.
+            </p>
+
+            <!-- Digital Receipt Card -->
+            <div class="max-w-md mx-auto bg-[#FAF7F5] p-6 rounded-2xl border border-stone-200 text-left space-y-3 mb-8 shadow-sm">
+              <div class="flex items-center justify-between pb-3 border-b border-stone-200">
+                <span class="text-xs text-stone-400 font-medium">Reference No.</span>
+                <span id="confirmation-ref" class="font-mono font-bold text-stone-900 text-sm"></span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-stone-500">Service:</span>
+                <span id="confirm-service" class="font-semibold text-stone-900"></span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-stone-500">Specialist:</span>
+                <span id="confirm-staff" class="font-semibold text-stone-900"></span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-stone-500">Scheduled Time:</span>
+                <span id="confirm-datetime" class="font-semibold text-stone-900"></span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-stone-500">Guest Name:</span>
+                <span id="confirm-name" class="font-semibold text-stone-900"></span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-stone-500">Contact:</span>
+                <span id="confirm-phone" class="font-semibold text-stone-900"></span>
+              </div>
+              <div class="flex justify-between text-sm font-bold pt-3 border-t border-stone-200 text-stone-900">
+                <span>Total Amount (PKR):</span>
+                <span id="confirm-price" class="text-[#99685B]"></span>
+              </div>
+            </div>
+
+            <!-- Calendar Export & Share Actions -->
+            <div class="flex flex-wrap items-center justify-center gap-3 max-w-md mx-auto">
+              <button 
+                onclick="openGoogleCalendar()" 
+                class="px-5 py-2.5 rounded-full bg-white border border-stone-300 text-stone-700 hover:bg-stone-50 text-xs font-semibold flex items-center gap-1.5"
+              >
+                <span>📅</span> Google Calendar
+              </button>
+              <button 
+                onclick="downloadCalendarICS()" 
+                class="px-5 py-2.5 rounded-full bg-white border border-stone-300 text-stone-700 hover:bg-stone-50 text-xs font-semibold flex items-center gap-1.5"
+              >
+                <span>📥</span> Download iCal (.ics)
+              </button>
+              <button 
+                onclick="shareBookingWhatsApp()" 
+                class="px-5 py-2.5 rounded-full bg-[#25D366] text-white hover:bg-[#1EBE5D] text-xs font-semibold flex items-center gap-1.5"
+              >
+                <span>💬</span> WhatsApp Details
+              </button>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-stone-100">
+              <a href="index.html" class="text-xs font-semibold text-[#99685B] hover:underline">Return to Home Page →</a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT SIDEBAR SUMMARY (1 COL) -->
+        <div class="lg:col-span-1 sticky top-28 space-y-6">
+          
+          <div id="booking-summary-sidebar" class="bg-white p-6 rounded-3xl border border-stone-200/80 shadow-soft">
+            <h3 class="font-serif text-lg font-bold text-stone-900 pb-3 border-b border-stone-100">
+              Appointment Summary
+            </h3>
+
+            <div class="py-4 space-y-3.5 text-xs">
+              <div>
+                <span class="text-stone-400 block mb-0.5">Selected Treatment</span>
+                <span id="summary-service-name" class="font-semibold text-stone-900 text-sm block">None selected</span>
+                <span id="summary-service-duration" class="text-[11px] text-stone-500">--</span>
+              </div>
+
+              <div class="pt-2 border-t border-stone-100">
+                <span class="text-stone-400 block mb-0.5">Preferred Specialist</span>
+                <span id="summary-staff" class="font-medium text-stone-800">Any Specialist</span>
+              </div>
+
+              <div class="pt-2 border-t border-stone-100">
+                <span class="text-stone-400 block mb-0.5">Date</span>
+                <span id="summary-date" class="font-medium text-stone-800">Not selected</span>
+              </div>
+
+              <div class="pt-2 border-t border-stone-100">
+                <span class="text-stone-400 block mb-0.5">Time Slot</span>
+                <span id="summary-time" class="font-medium text-stone-800">Not selected</span>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-stone-100 flex items-center justify-between">
+              <div>
+                <span class="text-[11px] text-stone-400 block">Estimated Total</span>
+                <span id="summary-service-price" class="text-lg font-bold text-stone-900">Rs. 0</span>
+              </div>
+              <span class="text-[10px] text-stone-400">Pay at Salon</span>
+            </div>
+          </div>
+
+          <!-- Location Info Box -->
+          <div class="bg-[#FAF7F5] p-5 rounded-2xl border border-stone-200/80 text-xs text-stone-600 space-y-2">
+            <div class="font-serif font-bold text-stone-900 text-sm flex items-center gap-2">
+              <span>📍</span> Karachi Salon Location
+            </div>
+            <p class="leading-relaxed">
+              Plot 14-C, Main Khayaban-e-Shahbaz, Phase 6, DHA, Karachi.<br />
+              Valet assistance provided at arrival.
+            </p>
+            <p class="text-[11px] text-[#99685B] font-medium pt-1">
+              Need assistance? Call: +92 300 9876543
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-stone-200 py-10 text-stone-600 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 Serene Sanctuary Salon & Spa • Karachi, Pakistan.</p>
+      <div class="flex items-center gap-6">
+        <a href="index.html" class="hover:text-[#99685B]">Home</a>
+        <a href="services.html" class="hover:text-[#99685B]">Services Menu</a>
+        <a href="booking.html" class="text-[#99685B] font-semibold">Book Online</a>
+        <a href="admin.html" class="hover:text-[#99685B]">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/supabase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/booking.js"></script>
+</body>
+</html>

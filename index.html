@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Serene Sanctuary Salon & Spa | Luxury Beauty in Karachi</title>
+  <meta name="description" content="Karachi's premier destination for luxury hair artistry, dermatologist-approved facials, bridal glams, and rejuvenating spa rituals in DHA Phase 6." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            roseGold: {
+              50: '#FDF9F7',
+              100: '#F7EDE8',
+              200: '#EED8CF',
+              300: '#DCB8AA',
+              400: '#C59B8E',
+              500: '#B38577',
+              600: '#99685B',
+              700: '#7A4E43',
+            },
+            warmGold: '#C8A46B',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="bg-[#23201F] text-[#FAF7F5] py-2 px-4 text-center text-xs tracking-wider font-medium flex items-center justify-center gap-2">
+    <span>✨ Experience pure tranquility in DHA Karachi.</span>
+    <span class="hidden sm:inline text-[#DCB8AA]">Appointments recommended.</span>
+    <a href="booking.html" class="underline text-[#DCB8AA] hover:text-white font-semibold ml-1">Book Today</a>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- LOGO -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#C59B8E] to-[#FAF7F5] flex items-center justify-center text-stone-900 font-serif text-xl font-bold shadow-sm group-hover:scale-105 transition-transform">
+          S
+        </div>
+        <div>
+          <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-stone-900 block leading-tight">Serene Sanctuary</span>
+          <span class="text-[10px] tracking-[0.2em] text-[#99685B] uppercase font-semibold">Salon & Luxury Spa • Karachi</span>
+        </div>
+      </a>
+
+      <!-- DESKTOP NAV -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-700">
+        <a href="index.html" class="text-[#99685B] font-semibold">Home</a>
+        <a href="services.html" class="hover:text-[#99685B] transition-colors">Services & Menu</a>
+        <a href="booking.html" class="hover:text-[#99685B] transition-colors">Book Online</a>
+        <a href="gallery.html" class="hover:text-[#99685B] transition-colors">Gallery</a>
+        <a href="admin.html" class="hover:text-[#99685B] transition-colors text-xs text-stone-400 hover:text-stone-700">Staff Portal</a>
+      </nav>
+
+      <!-- CTA BUTTON & MOBILE TOGGLE -->
+      <div class="flex items-center gap-3">
+        <a href="booking.html" class="hidden sm:inline-flex btn-primary px-6 py-2.5 rounded-full text-xs uppercase tracking-wider font-semibold">
+          Book Appointment
+        </a>
+
+        <button 
+          id="mobile-menu-btn" 
+          type="button" 
+          aria-label="Open Mobile Menu"
+          class="md:hidden p-2 rounded-xl text-stone-700 hover:bg-stone-100 focus:outline-none"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU DRAWER -->
+  <div id="mobile-menu" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex justify-end">
+    <div class="w-4/5 max-w-sm bg-[#FAF7F5] h-full p-6 flex flex-col justify-between shadow-2xl">
+      <div>
+        <div class="flex items-center justify-between pb-6 border-b border-stone-200">
+          <div class="font-serif font-bold text-xl text-stone-900">Serene Sanctuary</div>
+          <button id="mobile-menu-close" class="p-2 text-stone-500 hover:text-stone-900 text-xl font-bold">✕</button>
+        </div>
+        <nav class="mt-8 flex flex-col gap-5 text-base font-medium text-stone-800">
+          <a href="index.html" class="text-[#99685B] font-semibold">Home</a>
+          <a href="services.html" class="hover:text-[#99685B]">Services & Menu</a>
+          <a href="booking.html" class="hover:text-[#99685B]">Book Appointment</a>
+          <a href="gallery.html" class="hover:text-[#99685B]">Visual Gallery</a>
+          <a href="admin.html" class="text-stone-500 hover:text-stone-900 text-sm mt-4 pt-4 border-t border-stone-200">Admin & Staff Portal</a>
+        </nav>
+      </div>
+
+      <div class="pt-6 border-t border-stone-200 space-y-3">
+        <a href="booking.html" class="w-full btn-primary py-3 rounded-full text-center text-sm font-semibold block">
+          Schedule Appointment
+        </a>
+        <button onclick="openWhatsApp()" class="w-full btn-secondary py-3 rounded-full text-center text-sm font-medium flex items-center justify-center gap-2">
+          <span>💬</span> Chat on WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <main class="flex-1">
+    <section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden py-16 sm:py-24">
+      <!-- Background Ambient Image with Soft Gradient Overlay -->
+      <div class="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1920&q=80" 
+          alt="Serene Sanctuary Salon Ambience" 
+          class="w-full h-full object-cover object-center scale-105"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-[#FAF7F5]/95 via-[#FAF7F5]/85 to-[#FAF7F5]/40"></div>
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-luxury text-xs font-semibold uppercase tracking-wider mb-6">
+            <span>🌿</span> Luxury Beauty & Wellness • Karachi
+          </div>
+
+          <h1 class="font-serif text-4xl sm:text-6xl lg:text-7xl font-semibold text-stone-900 leading-[1.1] mb-6">
+            Experience <br class="hidden sm:inline" />
+            <span class="italic font-normal text-[#99685B]">Tranquility</span> & <br />
+            Timeless Elegance.
+          </h1>
+
+          <p class="text-stone-600 text-base sm:text-lg leading-relaxed mb-8 max-w-xl font-normal">
+            Immerse yourself in Karachi’s bespoke sanctuary for couture hair artistry, clinical HydraFacials, and royal bridal makeovers. Tailored for your moments of calm.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <a href="booking.html" class="btn-primary px-8 py-4 rounded-full text-center text-sm font-semibold shadow-lg shadow-rose-900/15 flex items-center justify-center gap-2">
+              <span>Book Appointment</span>
+              <span>→</span>
+            </a>
+            <a href="services.html" class="btn-secondary px-8 py-4 rounded-full text-center text-sm font-semibold hover:border-stone-400">
+              Explore Treatments
+            </a>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="mt-12 pt-8 border-t border-stone-300/60 grid grid-cols-3 gap-4 text-center sm:text-left">
+            <div>
+              <div class="text-xl sm:text-2xl font-serif font-bold text-stone-900">4.9 ★</div>
+              <div class="text-xs text-stone-500 font-medium mt-0.5">Over 2,500+ Reviews</div>
+            </div>
+            <div>
+              <div class="text-xl sm:text-2xl font-serif font-bold text-stone-900">100%</div>
+              <div class="text-xs text-stone-500 font-medium mt-0.5">Organic & Cruelty-Free</div>
+            </div>
+            <div>
+              <div class="text-xl sm:text-2xl font-serif font-bold text-stone-900">DHA Ph 6</div>
+              <div class="text-xs text-stone-500 font-medium mt-0.5">Private VIP Suites</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED SERVICES PREVIEW -->
+    <section class="py-20 bg-[#FAF7F5] border-t border-stone-200/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+          <div>
+            <span class="text-xs uppercase font-bold tracking-[0.2em] text-[#99685B] block mb-2">Our Signature Rituals</span>
+            <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold text-stone-900">
+              Crafted For Your Indulgence
+            </h2>
+          </div>
+          <a href="services.html" class="mt-4 md:mt-0 inline-flex items-center gap-1.5 text-sm font-semibold text-[#99685B] hover:text-[#7A4E43]">
+            <span>View Full Service Catalog</span>
+            <span>→</span>
+          </a>
+        </div>
+
+        <!-- Featured Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          <!-- Card 1 -->
+          <div class="bg-white rounded-3xl overflow-hidden border border-stone-100 shadow-soft card-hover flex flex-col">
+            <div class="h-48 overflow-hidden relative">
+              <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=600&q=80" alt="Hair Cut & Blowdry" class="w-full h-full object-cover" loading="lazy" />
+              <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-[#99685B]">Hair Artistry</span>
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 class="font-serif text-lg font-bold text-stone-900 mb-1">Signature Hair Cut & Blowdry</h3>
+                <p class="text-xs text-stone-500 line-clamp-2">Consultation, deep conditioning wash, master styling cut & bouncy blowdry.</p>
+              </div>
+              <div class="mt-4 pt-4 border-t border-stone-100 flex items-center justify-between">
+                <span class="font-bold text-stone-900 text-sm">Rs. 3,500</span>
+                <a href="booking.html" class="text-xs font-semibold text-[#99685B] hover:underline">Book Now →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-white rounded-3xl overflow-hidden border border-stone-100 shadow-soft card-hover flex flex-col">
+            <div class="h-48 overflow-hidden relative">
+              <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80" alt="Serene HydraGlow Facial" class="w-full h-full object-cover" loading="lazy" />
+              <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-[#99685B]">Skin Care</span>
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 class="font-serif text-lg font-bold text-stone-900 mb-1">Serene HydraGlow Facial</h3>
+                <p class="text-xs text-stone-500 line-clamp-2">7-step medical pore vacuum, ultrasonic extraction, hyaluronic infusion and LED therapy.</p>
+              </div>
+              <div class="mt-4 pt-4 border-t border-stone-100 flex items-center justify-between">
+                <span class="font-bold text-stone-900 text-sm">Rs. 8,500</span>
+                <a href="booking.html" class="text-xs font-semibold text-[#99685B] hover:underline">Book Now →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-white rounded-3xl overflow-hidden border border-stone-100 shadow-soft card-hover flex flex-col">
+            <div class="h-48 overflow-hidden relative">
+              <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=600&q=80" alt="Rose Petal Mani-Pedi" class="w-full h-full object-cover" loading="lazy" />
+              <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-[#99685B]">Nails</span>
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 class="font-serif text-lg font-bold text-stone-900 mb-1">Luxury Rose Petal Mani-Pedi</h3>
+                <p class="text-xs text-stone-500 line-clamp-2">Himalayan salt soak, organic rose scrub, cuticle perfection and high-shine polish.</p>
+              </div>
+              <div class="mt-4 pt-4 border-t border-stone-100 flex items-center justify-between">
+                <span class="font-bold text-stone-900 text-sm">Rs. 5,500</span>
+                <a href="booking.html" class="text-xs font-semibold text-[#99685B] hover:underline">Book Now →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="bg-white rounded-3xl overflow-hidden border border-stone-100 shadow-soft card-hover flex flex-col">
+            <div class="h-48 overflow-hidden relative">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Royal Barat Bridal Look" class="w-full h-full object-cover" loading="lazy" />
+              <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-[#99685B]">Bridal Couture</span>
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 class="font-serif text-lg font-bold text-stone-900 mb-1">Royal Barat Signature Bridal</h3>
+                <p class="text-xs text-stone-500 line-clamp-2">Complete HD airbrush bridal makeup, dupatta setting, styling, lashes and lenses.</p>
+              </div>
+              <div class="mt-4 pt-4 border-t border-stone-100 flex items-center justify-between">
+                <span class="font-bold text-stone-900 text-sm">Rs. 35,000</span>
+                <a href="booking.html" class="text-xs font-semibold text-[#99685B] hover:underline">Book Now →</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- AMBIENCE & PHILOSOPHY -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          <div class="space-y-6">
+            <span class="text-xs uppercase font-bold tracking-[0.2em] text-[#99685B]">The Serene Sanctuary Experience</span>
+            <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold text-stone-900 leading-tight">
+              An Oasis of Calm in the Heart of Karachi
+            </h2>
+            <p class="text-stone-600 leading-relaxed text-sm sm:text-base">
+              Escape the busy energy of Karachi and step into a private sanctuary designed from the ground up for peace, sensory relaxation, and clinical hygiene. Every treatment room is thoughtfully temperature-controlled, sanitized, and infused with soothing botanical aromatherapy.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+              <div class="p-4 rounded-2xl bg-[#FAF7F5] border border-stone-100">
+                <span class="text-xl block mb-1">🌿</span>
+                <h4 class="font-serif font-bold text-stone-900 text-base">Organic Ingredients</h4>
+                <p class="text-xs text-stone-500 mt-1">Imported hypoallergenic hair & skincare lines gentle on sensitive skin.</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-[#FAF7F5] border border-stone-100">
+                <span class="text-xl block mb-1">🕯️</span>
+                <h4 class="font-serif font-bold text-stone-900 text-base">Private VIP Suites</h4>
+                <p class="text-xs text-stone-500 mt-1">Dedicated private bridal lounges and quiet spa treatment rooms.</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-[#FAF7F5] border border-stone-100">
+                <span class="text-xl block mb-1">✨</span>
+                <h4 class="font-serif font-bold text-stone-900 text-base">Certified Specialists</h4>
+                <p class="text-xs text-stone-500 mt-1">Internationally certified hair colorists and master estheticians.</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-[#FAF7F5] border border-stone-100">
+                <span class="text-xl block mb-1">☕</span>
+                <h4 class="font-serif font-bold text-stone-900 text-base">Artisanal Tea Bar</h4>
+                <p class="text-xs text-stone-500 mt-1">Complimentary herbal teas and refreshing cardamom blends.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative">
+            <div class="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl shadow-stone-900/10 border-4 border-white">
+              <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1000&q=80" alt="Luxury Spa Room in Karachi" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <!-- Floated Badge -->
+            <div class="absolute -bottom-6 -left-6 bg-white p-5 rounded-2xl shadow-xl border border-stone-100 max-w-xs hidden sm:block">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-[#F7EDE8] text-[#99685B] flex items-center justify-center font-bold text-lg">
+                  📍
+                </div>
+                <div>
+                  <div class="font-serif font-bold text-stone-900 text-sm">DHA Phase 6, Karachi</div>
+                  <div class="text-xs text-stone-500">Valet parking available</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="py-20 bg-[#FAF7F5] border-t border-stone-200/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span class="text-xs uppercase font-bold tracking-[0.2em] text-[#99685B]">Kind Words</span>
+          <h2 class="font-serif text-3xl sm:text-4xl font-semibold text-stone-900 mt-2">Loved by Karachi's Discerning Women</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <div class="bg-white p-8 rounded-3xl border border-stone-100 shadow-soft flex flex-col justify-between">
+            <div>
+              <div class="text-[#C8A46B] text-base mb-3">★★★★★</div>
+              <p class="text-stone-700 text-sm italic leading-relaxed">
+                "The HydraGlow facial before my Barat was hands down the best investment for my skin. Dr. Zara and the team treated me with such genuine warmth. Truly Karachi's best luxury spa experience."
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-stone-100 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-[#F7EDE8] text-[#99685B] font-semibold flex items-center justify-center text-sm font-serif">
+                MA
+              </div>
+              <div>
+                <h4 class="font-serif font-bold text-stone-900 text-sm">Mahnoor A.</h4>
+                <p class="text-[11px] text-stone-400">DHA Karachi • Bridal Client</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-8 rounded-3xl border border-stone-100 shadow-soft flex flex-col justify-between">
+            <div>
+              <div class="text-[#C8A46B] text-base mb-3">★★★★★</div>
+              <p class="text-stone-700 text-sm italic leading-relaxed">
+                "Finding a salon in Karachi that gets balayage right without damaging hair is tough. Ayesha at Serene Sanctuary achieved the exact champagne blonde I showed on Pinterest!"
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-stone-100 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-[#F7EDE8] text-[#99685B] font-semibold flex items-center justify-center text-sm font-serif">
+                SK
+              </div>
+              <div>
+                <h4 class="font-serif font-bold text-stone-900 text-sm">Sara Khan</h4>
+                <p class="text-[11px] text-stone-400">Clifton • Balayage Regular</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-8 rounded-3xl border border-stone-100 shadow-soft flex flex-col justify-between">
+            <div>
+              <div class="text-[#C8A46B] text-base mb-3">★★★★★</div>
+              <p class="text-stone-700 text-sm italic leading-relaxed">
+                "The online booking system makes scheduling so effortless. No long phone calls or waiting in queues. The lavender aromatherapy massage melted all my work stress away."
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-stone-100 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-[#F7EDE8] text-[#99685B] font-semibold flex items-center justify-center text-sm font-serif">
+                ZR
+              </div>
+              <div>
+                <h4 class="font-serif font-bold text-stone-900 text-sm">Zoya R.</h4>
+                <p class="text-[11px] text-stone-400">PECHS • Wellness Client</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- LOCATION, TIMINGS & WHATSAPP SECTION -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-[#23201F] text-white rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center relative z-10">
+            <div>
+              <span class="text-xs uppercase font-bold tracking-[0.2em] text-[#DCB8AA] block mb-2">Visit Our Sanctuary</span>
+              <h2 class="font-serif text-3xl sm:text-4xl font-semibold mb-4 text-[#FAF7F5]">
+                Plan Your Visit to Serene Sanctuary
+              </h2>
+              <p class="text-stone-400 text-sm leading-relaxed mb-8">
+                Located conveniently in the upscale commercial hub of DHA Phase 6, Karachi. Ample secure parking with valet assistance is provided for our guests.
+              </p>
+
+              <div class="space-y-4 text-sm text-stone-300">
+                <div class="flex items-start gap-3">
+                  <span class="text-[#DCB8AA] text-lg">📍</span>
+                  <div>
+                    <span class="font-semibold text-white block">Karachi Address</span>
+                    Plot 14-C, Main Khayaban-e-Shahbaz, Phase 6, D.H.A, Karachi
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                  <span class="text-[#DCB8AA] text-lg">⏰</span>
+                  <div>
+                    <span class="font-semibold text-white block">Opening Hours</span>
+                    Monday to Sunday: 11:00 AM – 08:00 PM (Including Public Holidays)
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                  <span class="text-[#DCB8AA] text-lg">📞</span>
+                  <div>
+                    <span class="font-semibold text-white block">Direct Inquiries</span>
+                    +92 300 9876543 • hello@serenesalon.pk
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-8 flex flex-wrap gap-4">
+                <a href="booking.html" class="btn-primary px-8 py-3.5 rounded-full text-xs uppercase font-semibold">
+                  Reserve Your Spot
+                </a>
+                <button onclick="openWhatsApp()" class="px-6 py-3.5 rounded-full bg-[#25D366] text-white hover:bg-[#1EBE5D] text-xs font-semibold flex items-center gap-2 transition-all">
+                  <span>💬</span> WhatsApp Us
+                </button>
+              </div>
+            </div>
+
+            <!-- Interactive Map Graphic Placeholder -->
+            <div class="rounded-2xl overflow-hidden bg-stone-800 border border-stone-700 h-72 lg:h-96 relative flex items-center justify-center p-6 text-center">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-full bg-[#C59B8E]/20 text-[#DCB8AA] flex items-center justify-center mx-auto text-2xl">
+                  🗺️
+                </div>
+                <h4 class="font-serif font-bold text-white text-lg">DHA Phase 6 • Karachi</h4>
+                <p class="text-xs text-stone-400 max-w-xs mx-auto">
+                  Khayaban-e-Shahbaz, close to Saba Avenue & 26th Street.
+                </p>
+                <a 
+                  href="https://maps.google.com/?q=DHA+Phase+6+Karachi" 
+                  target="_blank" 
+                  class="inline-block text-xs text-[#DCB8AA] underline font-medium hover:text-white"
+                >
+                  Open in Google Maps ↗
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#FAF7F5] border-t border-stone-200 py-12 text-stone-600 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div class="space-y-3 md:col-span-2">
+          <div class="font-serif text-2xl font-bold text-stone-900">Serene Sanctuary</div>
+          <p class="text-stone-500 max-w-sm leading-relaxed text-xs">
+            Karachi's dedicated beauty and wellness spa delivering organic treatments, bridal transformations, and tranquil salon experiences.
+          </p>
+        </div>
+        <div>
+          <h4 class="font-bold text-stone-900 uppercase tracking-wider mb-3 text-[11px]">Quick Links</h4>
+          <ul class="space-y-2">
+            <li><a href="services.html" class="hover:text-[#99685B]">Services & Price Menu</a></li>
+            <li><a href="booking.html" class="hover:text-[#99685B]">Book an Appointment</a></li>
+            <li><a href="gallery.html" class="hover:text-[#99685B]">Transformations Gallery</a></li>
+            <li><a href="admin.html" class="hover:text-[#99685B]">Staff & Management Login</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-stone-900 uppercase tracking-wider mb-3 text-[11px]">Contact Karachi</h4>
+          <p class="text-stone-500 leading-relaxed">
+            Khayaban-e-Shahbaz, DHA Phase 6, Karachi<br />
+            Phone: +92 300 9876543<br />
+            Mon-Sun: 11:00 AM – 8:00 PM
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-8 border-t border-stone-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-stone-400 text-[11px]">
+        <p>© 2026 Serene Sanctuary Salon & Spa. All rights reserved.</p>
+        <p class="flex items-center gap-4">
+          <span>Karachi, Pakistan</span>
+          <span>•</span>
+          <a href="booking.html" class="text-[#99685B] font-semibold">Book Online</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/supabase-config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

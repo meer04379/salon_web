@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services & Treatment Menu | Serene Sanctuary Salon & Spa Karachi</title>
+  <meta name="description" content="Explore our complete menu of hair styling, HydraFacials, luxury mani-pedis, bridal glams, and relaxation massages in Karachi with transparent PKR pricing." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            roseGold: {
+              50: '#FDF9F7',
+              100: '#F7EDE8',
+              200: '#EED8CF',
+              300: '#DCB8AA',
+              400: '#C59B8E',
+              500: '#B38577',
+              600: '#99685B',
+              700: '#7A4E43',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="min-h-screen flex flex-col antialiased bg-[#FAF7F5]">
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="bg-[#23201F] text-[#FAF7F5] py-2 px-4 text-center text-xs tracking-wider font-medium flex items-center justify-center gap-2">
+    <span>✨ All prices include premium imported organic products.</span>
+    <a href="booking.html" class="underline text-[#DCB8AA] hover:text-white font-semibold ml-1">Reserve a Slot</a>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#C59B8E] to-[#FAF7F5] flex items-center justify-center text-stone-900 font-serif text-xl font-bold shadow-sm group-hover:scale-105 transition-transform">
+          S
+        </div>
+        <div>
+          <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-stone-900 block leading-tight">Serene Sanctuary</span>
+          <span class="text-[10px] tracking-[0.2em] text-[#99685B] uppercase font-semibold">Salon & Luxury Spa • Karachi</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-700">
+        <a href="index.html" class="hover:text-[#99685B] transition-colors">Home</a>
+        <a href="services.html" class="text-[#99685B] font-semibold">Services & Menu</a>
+        <a href="booking.html" class="hover:text-[#99685B] transition-colors">Book Online</a>
+        <a href="gallery.html" class="hover:text-[#99685B] transition-colors">Gallery</a>
+        <a href="admin.html" class="hover:text-[#99685B] transition-colors text-xs text-stone-400 hover:text-stone-700">Staff Portal</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="booking.html" class="hidden sm:inline-flex btn-primary px-6 py-2.5 rounded-full text-xs uppercase tracking-wider font-semibold">
+          Book Appointment
+        </a>
+
+        <button 
+          id="mobile-menu-btn" 
+          type="button" 
+          aria-label="Open Mobile Menu"
+          class="md:hidden p-2 rounded-xl text-stone-700 hover:bg-stone-100 focus:outline-none"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU DRAWER -->
+  <div id="mobile-menu" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex justify-end">
+    <div class="w-4/5 max-w-sm bg-[#FAF7F5] h-full p-6 flex flex-col justify-between shadow-2xl">
+      <div>
+        <div class="flex items-center justify-between pb-6 border-b border-stone-200">
+          <div class="font-serif font-bold text-xl text-stone-900">Serene Sanctuary</div>
+          <button id="mobile-menu-close" class="p-2 text-stone-500 hover:text-stone-900 text-xl font-bold">✕</button>
+        </div>
+        <nav class="mt-8 flex flex-col gap-5 text-base font-medium text-stone-800">
+          <a href="index.html" class="hover:text-[#99685B]">Home</a>
+          <a href="services.html" class="text-[#99685B] font-semibold">Services & Menu</a>
+          <a href="booking.html" class="hover:text-[#99685B]">Book Appointment</a>
+          <a href="gallery.html" class="hover:text-[#99685B]">Visual Gallery</a>
+          <a href="admin.html" class="text-stone-500 hover:text-stone-900 text-sm mt-4 pt-4 border-t border-stone-200">Admin Portal</a>
+        </nav>
+      </div>
+
+      <div class="pt-6 border-t border-stone-200 space-y-3">
+        <a href="booking.html" class="w-full btn-primary py-3 rounded-full text-center text-sm font-semibold block">
+          Schedule Appointment
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 py-12 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- HERO HEADER -->
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full badge-luxury text-xs font-semibold uppercase tracking-wider mb-4">
+          <span>🌸</span> Comprehensive Treatment Menu
+        </span>
+        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold text-stone-900 leading-tight mb-4">
+          Indulge in Personalized Care
+        </h1>
+        <p class="text-stone-600 text-base leading-relaxed font-normal">
+          Browse our curated catalog of luxury treatments. All services are performed by internationally trained specialists in private sanitized suites in Karachi.
+        </p>
+      </div>
+
+      <!-- SEARCH & FILTER BAR -->
+      <div class="mb-10 space-y-6">
+        
+        <!-- Search Input -->
+        <div class="max-w-md mx-auto relative">
+          <input 
+            type="text" 
+            id="service-search-input" 
+            placeholder="Search treatments (e.g. Balayage, HydraFacial, Mani-Pedi)..."
+            class="w-full px-5 py-3.5 pl-12 rounded-full bg-white border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#C59B8E]/50 text-sm text-stone-800 shadow-sm placeholder:text-stone-400"
+          />
+          <span class="absolute left-4 top-3.5 text-stone-400 text-base">🔍</span>
+        </div>
+
+        <!-- Filter Tabs (Horizontal Scrollable on Mobile) -->
+        <div class="flex items-center justify-start md:justify-center gap-2 overflow-x-auto pb-2 no-scrollbar" id="category-filter-bar">
+          <!-- Dynamically populated by services.js -->
+        </div>
+
+        <!-- Count Indicator -->
+        <div class="flex items-center justify-between text-xs text-stone-400 font-medium px-2">
+          <span id="services-count">Loading services...</span>
+          <span>Prices listed in PKR (Exclusive of taxes)</span>
+        </div>
+      </div>
+
+      <!-- SERVICES CARDS GRID -->
+      <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Dynamically rendered by services.js -->
+        <div class="col-span-full text-center py-20 text-stone-400">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-2 border-stone-300 border-t-[#C59B8E] mb-3"></div>
+          <p class="text-sm">Loading salon treatment catalog...</p>
+        </div>
+      </div>
+
+      <!-- CUSTOM CONSULTATION CTA BANNER -->
+      <div class="mt-20 bg-white rounded-3xl p-8 sm:p-12 border border-stone-200/80 shadow-soft flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <h3 class="font-serif text-2xl sm:text-3xl font-bold text-stone-900 mb-2">
+            Planning a Wedding or Special Event in Karachi?
+          </h3>
+          <p class="text-stone-600 text-sm max-w-xl">
+            We provide bespoke bridal entourage packages, pre-bridal glow schedules, and customized makeover consultations.
+          </p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <button onclick="openWhatsApp('Hi! I would like to inquire about customized bridal & event packages.')" class="btn-secondary px-6 py-3.5 rounded-full text-xs font-semibold flex items-center justify-center gap-2 whitespace-nowrap">
+            <span>💬</span> WhatsApp Consultation
+          </button>
+          <a href="booking.html" class="btn-primary px-6 py-3.5 rounded-full text-xs uppercase tracking-wider font-semibold text-center whitespace-nowrap">
+            Book Online
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-stone-200 py-12 text-stone-600 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 Serene Sanctuary Salon & Spa • Karachi, Pakistan.</p>
+      <div class="flex items-center gap-6">
+        <a href="index.html" class="hover:text-[#99685B]">Home</a>
+        <a href="services.html" class="text-[#99685B] font-semibold">Services</a>
+        <a href="booking.html" class="hover:text-[#99685B]">Book Online</a>
+        <a href="admin.html" class="hover:text-[#99685B]">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/supabase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/services.js"></script>
+</body>
+</html>
