@@ -6,7 +6,24 @@
  */
 
 const ARTICLES_DATA = [
-    {
+      {
+    "id": "peptide-barrier-repair-karachi-smog-defense",
+    "slug": "peptide-barrier-repair-karachi-smog-defense",
+    "title": "Peptide Barrier Repair: Defending Skin Against Karachi Coastal Smog",
+    "category": "Skincare",
+    "readTime": "5 min read",
+    "date": "Nov 2026",
+    "author": "Dr. Zara Alvi",
+    "authorRole": "Master Esthetician & Skin Specialist",
+    "authorAvatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80",
+    "image": "https://images.unsplash.com/photo-1506152983158-b4a74a01c721?auto=format&fit=crop&w=1200&q=80",
+    "excerpt": "Karachi's unique mix of salty coastal humidity and airborne smog severely compromises your skin lipid barrier. Discover how modern peptide barrier repair restores your natural radiant glow.",
+    "featured": true,
+    "serviceId": "srv-5",
+    "serviceName": "Serene HydraGlow Facial",
+    "content": "<p class=\"lead text-base sm:text-lg text-stone-700 leading-relaxed font-serif italic mb-6\">Living in Karachi presents a unique climate challenge: high marine humidity combined with persistent smog micro-particles slowly erodes the delicate lipid barrier, leading to premature dullness, dehydration, and sensitivity.</p><h3 class=\"font-serif text-2xl font-bold text-stone-900 mt-6 mb-3\">The Anatomy of Urban Coastal Skin Stress</h3><p class=\"text-stone-600 leading-relaxed mb-4\">When humid Arabian Sea breezes collide with urban air pollutants across DHA and Clifton, microscopic particulate matter clings to the epidermis. This environmental blend triggers oxidative stress, degrading collagen and creating tiny fissures in your moisture barrier. The result is a perplexing combination of surface oiliness paired with deep dermal dehydration.</p><h3 class=\"font-serif text-2xl font-bold text-stone-900 mt-6 mb-3\">Why Peptides Are 2026’s Gold Standard in Skincare</h3><p class=\"text-stone-600 leading-relaxed mb-4\">Unlike heavy occlusive creams that trap heat and sweat during warm Karachi months, bio-identical peptides act as cellular messengers. They signal the skin to rebuild structural proteins and lipid bilayers naturally. By strengthening intercellular bonds without clogging pores, peptide therapy offers lightweight, deep-tier fortification tailored for coastal weather.</p><div class=\"bg-[#FDF9F7] p-6 rounded-2xl border-l-4 border-[#C59B8E] my-6\"><h4 class=\"font-serif font-bold text-stone-900 text-lg mb-1\">Expert Salon Tip from Dr. Zara Alvi:</h4><p class=\"text-stone-600 text-sm italic\">Avoid heavy botanical oils during peak smog season as they act like magnets for airborne pollutants. Instead, layer water-based peptide serums and schedule regular deep vortex infusions to flush out micro-particulates.</p></div><h3 class=\"font-serif text-2xl font-bold text-stone-900 mt-6 mb-3\">Resetting Your Barrier at Serene Sanctuary</h3><p class=\"text-stone-600 leading-relaxed mb-4\">Topical home routines can only penetrate so far when facing severe atmospheric pollution. Professional aesthetic treatments are necessary to clear congested pores while simultaneously delivering active repair complexes into deeper dermal layers.</p><p class=\"text-stone-600 leading-relaxed mb-4\">Restore your skin’s defense system with our signature <strong>Serene HydraGlow Facial</strong> at our Clifton sanctuary. Formulated to target environmental damage, this medical-grade treatment uses painless vortex technology to purge smog particles, followed by an intensive infusion of peptides, antioxidants, and LED light therapy for an instant, long-lasting glass-skin finish.</p>"
+  },
+{
     "id": "defeating-karachi-coastal-fatigue-aromatherapy-reset",
     "slug": "defeating-karachi-coastal-fatigue-aromatherapy-reset",
     "title": "Resetting Karachi’s Coastal Stress: The 2026 Aromatherapy Ritual",

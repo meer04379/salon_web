@@ -15,8 +15,43 @@ if (!API_KEY) {
   console.error('Please configure GEMINI_API_KEY in your GitHub Secrets or environment.');
   process.exit(1);
 }
-const MODEL_NAME = 'gemini-3.5-flash';
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+const CANDIDATE_MODELS = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.8-flash'];
+
+async function callGemini(prompt) {
+  for (const model of CANDIDATE_MODELS) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
+    console.log(`🤖 Trying Gemini model: ${model}...`);
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            responseMimeType: 'application/json',
+            temperature: 0.7
+          }
+        })
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (rawText) {
+          return { model, text: rawText };
+        }
+      } else {
+        const errText = await response.text();
+        console.warn(`⚠️ Model ${model} returned ${response.status}: ${errText.slice(0, 150)}...`);
+      }
+    } catch (err) {
+      console.warn(`⚠️ Error connecting to ${model}: ${err.message}`);
+    }
+    // Brief backoff before next model
+    await new Promise(r => setTimeout(r, 1500));
+  }
+  throw new Error('All Gemini candidate models failed.');
+}
 
 const ARTICLES_FILE_PATH = path.join(__dirname, '..', 'js', 'articles.js');
 
@@ -147,31 +182,9 @@ Return a single valid JSON object with the following exact keys:
 }
 `;
 
-  console.log(`🤖 Requesting Gemini AI (${MODEL_NAME}) to write article by ${specialist.name} (${specialist.category})...`);
-
   try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.7
-        }
-      })
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`Gemini API returned status ${response.status}: ${errText}`);
-    }
-
-    const json = await response.json();
-    const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!rawText) {
-      throw new Error('Empty response from Gemini API.');
-    }
+    const { model, text: rawText } = await callGemini(prompt);
+    console.log(`✨ Successfully received response from ${model}!`);
 
     const articleData = JSON.parse(rawText);
     console.log(`✅ Generated New Article: "${articleData.title}"`);
