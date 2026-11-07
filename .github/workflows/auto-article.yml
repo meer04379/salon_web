@@ -1,0 +1,43 @@
+name: Auto-Generate Trending Salon Article
+
+on:
+  # Allow manual trigger with a single click from GitHub Actions UI
+  workflow_dispatch:
+
+  # Scheduled trigger: Runs automatically every Monday & Thursday at 06:00 UTC (11:00 AM PKT)
+  schedule:
+    - cron: '0 6 * * 1,4'
+
+permissions:
+  contents: write
+
+jobs:
+  generate-article:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate Trending Beauty Article via Gemini AI
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          node scripts/generate-article.js
+
+      - name: Commit and Push New Article
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add js/articles.js
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Auto-generate trending salon article via Gemini AI [skip ci]"
+            git push origin main
+          fi

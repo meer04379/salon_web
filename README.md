@@ -17,6 +17,10 @@
 
 ```
 salon_web/
+├── .github/workflows/
+│   └── auto-article.yml    # GitHub Actions workflow for scheduled & manual AI article generation
+├── scripts/
+│   └── generate-article.js # Automated Gemini AI article generator & publisher
 ├── index.html              # Home page (Hero, featured rituals, articles preview, reviews, Karachi location & WhatsApp)
 ├── about.html              # Story, 4 pillars of excellence, certified team bios, and salon philosophy
 ├── services.html           # Categorized service catalog with live search & direct booking CTA
@@ -78,6 +82,29 @@ Simply navigate into the `salon_web` folder and double-click `index.html` to ope
   - **Specialist Management**: Add/edit stylists, assign specialties, and toggle active availability.
   - **Salon Settings**: Edit Karachi address, contact numbers, opening/closing hours, and slot intervals.
 - **Demo Access**: Click the **"1-Click Demo Login"** button or enter password `admin123`.
+
+---
+
+## 🤖 Automated AI Article Generator (GitHub Actions)
+
+The website features an automated GitHub Action (`.github/workflows/auto-article.yml`) powered by **Google Gemini AI**:
+1. **Searches & Identifies Trending Salon Topics**: Automatically discovers trending beauty, skincare, haircare, and bridal topics tailored for Karachi clients.
+2. **Generates High-Quality Articles**: Produces rich editorial content attributed to our certified master specialists with expert advice and service booking links.
+3. **Auto-Publishes & Deploys**: Automatically appends the new article into `js/articles.js`, commits, and pushes to `main` branch, triggering instant redeployment.
+
+### How to Trigger:
+- **Automatic**: Runs automatically twice a week (every Monday & Thursday at 11:00 AM PKT).
+- **Manual (1-Click)**:
+  1. Go to your GitHub repository -> **Actions** tab.
+  2. Select **Auto-Generate Trending Salon Article**.
+  3. Click **Run workflow** -> **Run workflow**.
+
+### Configuring Your Gemini API Key Secret:
+1. In your GitHub repository, go to **Settings** -> **Secrets and variables** -> **Actions**.
+2. Click **New repository secret**.
+3. Name: `GEMINI_API_KEY`
+4. Value: Paste your Gemini API Key.
+5. Click **Add secret**.
 
 ---
 
