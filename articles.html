@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Articles & Beauty Journal | Serene Sanctuary Salon & Spa Karachi</title>
+  <meta name="description" content="Read expert haircare, clinical skincare, bridal beauty preparation, and holistic wellness guides written by certified master stylists in Karachi, Pakistan." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            roseGold: {
+              50: '#FDF9F7',
+              100: '#F7EDE8',
+              200: '#EED8CF',
+              300: '#DCB8AA',
+              400: '#C59B8E',
+              500: '#B38577',
+              600: '#99685B',
+              700: '#7A4E43',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="min-h-screen flex flex-col antialiased bg-[#FAF7F5]">
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="bg-[#23201F] text-[#FAF7F5] py-2 px-4 text-center text-xs tracking-wider font-medium flex items-center justify-center gap-2">
+    <span>✨ Expert beauty, bridal, and wellness wisdom from Karachi's master stylists.</span>
+    <a href="booking.html" class="underline text-[#DCB8AA] hover:text-white font-semibold ml-1">Book a Treatment</a>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- LOGO -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#C59B8E] to-[#FAF7F5] flex items-center justify-center text-stone-900 font-serif text-xl font-bold shadow-sm group-hover:scale-105 transition-transform">
+          S
+        </div>
+        <div>
+          <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-stone-900 block leading-tight">Serene Sanctuary</span>
+          <span class="text-[10px] tracking-[0.2em] text-[#99685B] uppercase font-semibold">Salon & Luxury Spa • Karachi</span>
+        </div>
+      </a>
+
+      <!-- DESKTOP NAV -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-stone-700">
+        <a href="index.html" class="hover:text-[#99685B] transition-colors">Home</a>
+        <a href="about.html" class="hover:text-[#99685B] transition-colors">About Us</a>
+        <a href="services.html" class="hover:text-[#99685B] transition-colors">Services & Menu</a>
+        <a href="booking.html" class="hover:text-[#99685B] transition-colors">Book Online</a>
+        <a href="gallery.html" class="hover:text-[#99685B] transition-colors">Gallery</a>
+        <a href="articles.html" class="text-[#99685B] font-semibold">Articles</a>
+        <a href="admin.html" class="hover:text-[#99685B] transition-colors text-xs text-stone-400 hover:text-stone-700">Staff Portal</a>
+      </nav>
+
+      <!-- CTA BUTTON & MOBILE TOGGLE -->
+      <div class="flex items-center gap-3">
+        <a href="booking.html" class="hidden sm:inline-flex btn-primary px-6 py-2.5 rounded-full text-xs uppercase tracking-wider font-semibold">
+          Book Appointment
+        </a>
+
+        <button 
+          id="mobile-menu-btn" 
+          type="button" 
+          aria-label="Open Mobile Menu"
+          class="md:hidden p-2 rounded-xl text-stone-700 hover:bg-stone-100 focus:outline-none"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU DRAWER -->
+  <div id="mobile-menu" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex justify-end">
+    <div class="w-4/5 max-w-sm bg-[#FAF7F5] h-full p-6 flex flex-col justify-between shadow-2xl">
+      <div>
+        <div class="flex items-center justify-between pb-6 border-b border-stone-200">
+          <div class="font-serif font-bold text-xl text-stone-900">Serene Sanctuary</div>
+          <button id="mobile-menu-close" class="p-2 text-stone-500 hover:text-stone-900 text-xl font-bold">✕</button>
+        </div>
+        <nav class="mt-8 flex flex-col gap-5 text-base font-medium text-stone-800">
+          <a href="index.html" class="hover:text-[#99685B]">Home</a>
+          <a href="about.html" class="hover:text-[#99685B]">About Us</a>
+          <a href="services.html" class="hover:text-[#99685B]">Services & Menu</a>
+          <a href="booking.html" class="hover:text-[#99685B]">Book Appointment</a>
+          <a href="gallery.html" class="hover:text-[#99685B]">Visual Gallery</a>
+          <a href="articles.html" class="text-[#99685B] font-semibold">Articles & Journal</a>
+          <a href="admin.html" class="text-stone-500 hover:text-stone-900 text-sm mt-4 pt-4 border-t border-stone-200">Admin Portal</a>
+        </nav>
+      </div>
+
+      <div class="pt-6 border-t border-stone-200 space-y-3">
+        <a href="booking.html" class="w-full btn-primary py-3 rounded-full text-center text-sm font-semibold block">
+          Schedule Appointment
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN ARTICLES CONTENT -->
+  <main class="flex-1 py-12 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- HERO HEADER -->
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full badge-luxury text-xs font-semibold uppercase tracking-wider mb-4">
+          <span>🌿</span> The Beauty & Wellness Journal
+        </span>
+        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold text-stone-900 leading-tight mb-4">
+          Expert Articles & Care Guides
+        </h1>
+        <p class="text-stone-600 text-base leading-relaxed font-normal">
+          Insightful articles on coastal haircare, clinical facials, bridal countdowns, and restorative wellness written by our internationally certified team in Karachi.
+        </p>
+      </div>
+
+      <!-- SEARCH & FILTER BAR -->
+      <div class="mb-10 space-y-6">
+        
+        <!-- Search Input -->
+        <div class="max-w-md mx-auto relative">
+          <input 
+            type="text" 
+            id="articles-search-input" 
+            placeholder="Search articles by title, topic, or specialist..."
+            class="w-full px-5 py-3.5 pl-12 rounded-full bg-white border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#C59B8E]/50 text-sm text-stone-800 shadow-sm placeholder:text-stone-400"
+          />
+          <span class="absolute left-4 top-3.5 text-stone-400 text-base">🔍</span>
+        </div>
+
+        <!-- Filter Tabs (Horizontal Scrollable on Mobile) -->
+        <div class="flex items-center justify-start md:justify-center gap-2 overflow-x-auto pb-2 no-scrollbar" id="articles-category-pills">
+          <!-- Dynamically populated by articles.js -->
+        </div>
+
+        <!-- Count Indicator -->
+        <div class="flex items-center justify-between text-xs text-stone-400 font-medium px-2">
+          <span id="articles-count-badge">Loading articles...</span>
+          <span>Serene Sanctuary Editorial Team</span>
+        </div>
+      </div>
+
+      <!-- FEATURED ARTICLE HERO SECTION -->
+      <div id="featured-article-container">
+        <!-- Dynamically rendered by articles.js -->
+      </div>
+
+      <!-- ARTICLES GRID -->
+      <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Dynamically rendered by articles.js -->
+      </div>
+
+      <!-- BEAUTY ADVICE & BOOKING BANNER -->
+      <div class="mt-20 bg-white rounded-3xl p-8 sm:p-12 border border-stone-200/80 shadow-soft flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <span class="text-xs uppercase font-bold tracking-[0.2em] text-[#99685B] block mb-1">Personalized Consultation</span>
+          <h3 class="font-serif text-2xl sm:text-3xl font-bold text-stone-900 mb-2">
+            Have Questions About Your Skin or Hair Type?
+          </h3>
+          <p class="text-stone-600 text-sm max-w-xl">
+            Book a complimentary 15-minute consultation at our DHA Phase 6 salon with our master colorists and skin clinicians.
+          </p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <button onclick="openWhatsApp('Hello Serene Sanctuary! I read your beauty journal and would like to ask some questions regarding my hair/skin.')" class="btn-secondary px-6 py-3.5 rounded-full text-xs font-semibold flex items-center justify-center gap-2 whitespace-nowrap">
+            <span>💬</span> WhatsApp Consultation
+          </button>
+          <a href="booking.html" class="btn-primary px-6 py-3.5 rounded-full text-xs uppercase tracking-wider font-semibold text-center whitespace-nowrap">
+            Book Appointment →
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ARTICLE READER MODAL -->
+  <div id="article-reader-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6" onclick="if(event.target === this) closeArticleModal();">
+    <div class="relative max-w-3xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col border border-stone-200">
+      
+      <!-- Top Modal Header -->
+      <div class="px-6 py-4 border-b border-stone-100 flex items-center justify-between bg-[#FAF7F5]">
+        <div class="flex items-center gap-3">
+          <span id="modal-article-category" class="bg-[#F7EDE8] text-[#99685B] font-semibold text-xs px-3 py-1 rounded-full"></span>
+          <span class="text-xs text-stone-400">•</span>
+          <span id="modal-article-readtime" class="text-xs text-stone-500"></span>
+          <span class="text-xs text-stone-400">•</span>
+          <span id="modal-article-date" class="text-xs text-stone-500"></span>
+        </div>
+        <button onclick="closeArticleModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg font-bold transition-all">
+          ✕
+        </button>
+      </div>
+
+      <!-- Scrollable Article Reader Body -->
+      <div id="modal-scroll-container" class="overflow-y-auto p-6 sm:p-10 flex-1">
+        
+        <!-- Article Title -->
+        <h1 id="modal-article-title" class="font-serif text-2xl sm:text-4xl font-bold text-stone-900 leading-snug mb-6"></h1>
+
+        <!-- Author Information Box -->
+        <div class="flex items-center justify-between pb-6 mb-6 border-b border-stone-100">
+          <div class="flex items-center gap-3">
+            <img id="modal-article-author-img" src="" alt="Author" class="w-12 h-12 rounded-full object-cover border-2 border-stone-200" />
+            <div>
+              <h4 id="modal-article-author-name" class="font-serif font-bold text-stone-900 text-base"></h4>
+              <p id="modal-article-author-role" class="text-xs text-[#99685B] font-semibold"></p>
+            </div>
+          </div>
+          <button onclick="shareArticleOnWhatsApp()" class="text-xs font-semibold px-4 py-2 rounded-full bg-[#25D366]/10 text-[#1EBE5D] hover:bg-[#25D366]/20 flex items-center gap-1.5 transition-colors">
+            <span>💬</span> Share
+          </button>
+        </div>
+
+        <!-- Featured Cover Image -->
+        <div class="aspect-[16/9] rounded-2xl overflow-hidden mb-8 bg-stone-100">
+          <img id="modal-article-cover" src="" alt="Cover" class="w-full h-full object-cover" />
+        </div>
+
+        <!-- Article Content Body -->
+        <div id="modal-article-body" class="prose prose-stone max-w-none text-stone-700 text-sm sm:text-base leading-relaxed">
+          <!-- Populated by articles.js -->
+        </div>
+
+        <!-- Recommended Salon Treatment CTA Box inside Modal -->
+        <div id="modal-article-service-cta" class="mt-10 p-6 rounded-2xl bg-[#FAF7F5] border border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <span class="text-[11px] uppercase font-bold text-[#99685B] tracking-wider block">Recommended Sanctuary Treatment</span>
+            <h4 id="modal-service-name" class="font-serif font-bold text-stone-900 text-lg"></h4>
+            <p class="text-xs text-stone-500 mt-0.5">Experience this specialized service at our DHA Karachi location.</p>
+          </div>
+          <a id="modal-service-book-btn" href="booking.html" class="btn-primary px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider whitespace-nowrap">
+            Book This Ritual →
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Bottom Modal Bar -->
+      <div class="px-6 py-3 border-t border-stone-100 bg-[#FAF7F5] flex items-center justify-between text-xs text-stone-500">
+        <span>Serene Sanctuary • Karachi, Pakistan</span>
+        <button onclick="closeArticleModal()" class="text-[#99685B] font-semibold hover:underline">
+          Close Article ✕
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-stone-200 py-10 text-stone-600 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 Serene Sanctuary Salon & Spa • Karachi, Pakistan.</p>
+      <div class="flex items-center gap-6">
+        <a href="index.html" class="hover:text-[#99685B]">Home</a>
+        <a href="about.html" class="hover:text-[#99685B]">About Us</a>
+        <a href="services.html" class="hover:text-[#99685B]">Services</a>
+        <a href="articles.html" class="text-[#99685B] font-semibold">Articles</a>
+        <a href="booking.html" class="hover:text-[#99685B]">Book Online</a>
+        <a href="admin.html" class="hover:text-[#99685B]">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/supabase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/articles.js"></script>
+</body>
+</html>

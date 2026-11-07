@@ -17,10 +17,12 @@
 
 ```
 salon_web/
-├── index.html              # Home page (Hero, featured rituals, reviews, Karachi location & WhatsApp)
+├── index.html              # Home page (Hero, featured rituals, articles preview, reviews, Karachi location & WhatsApp)
+├── about.html              # Story, 4 pillars of excellence, certified team bios, and salon philosophy
 ├── services.html           # Categorized service catalog with live search & direct booking CTA
 ├── booking.html            # 6-Step interactive booking wizard with conflict-free slot scheduling
 ├── gallery.html            # Visual portfolio & ambience gallery with full-screen lightbox
+├── articles.html           # Beauty journal & articles (haircare, skincare, bridal guides, reader modal)
 ├── admin.html              # Staff & management portal (Dashboard, Bookings, Services CRUD, Settings)
 ├── css/
 │   └── style.css           # Luxury color variables, custom calendar, pill buttons, micro-animations
@@ -30,6 +32,7 @@ salon_web/
 │   ├── services.js         # Service catalog logic, search, category filtering
 │   ├── booking.js          # Booking engine, vanilla calendar, live slot generator, .ics / Google Cal export
 │   ├── gallery.js          # Image filters and interactive lightbox modal
+│   ├── articles.js         # Articles repository, search filter, category tabs & reader modal controller
 │   └── admin.js            # Admin analytics, status manager, service CRUD, staff management
 ├── supabase-schema.sql     # Complete PostgreSQL/Supabase schema with RLS & conflict prevention
 └── README.md               # Quickstart and deployment guide
