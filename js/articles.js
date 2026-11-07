@@ -6,7 +6,24 @@
  */
 
 const ARTICLES_DATA = [
-      {
+        {
+    "id": "urban-smog-defense-peptide-barrier-repair",
+    "slug": "urban-smog-defense-peptide-barrier-repair",
+    "title": "Combat Karachi Smog: The Ultimate Peptide Barrier Repair Guide",
+    "category": "Skincare",
+    "readTime": "5 min read",
+    "date": "Nov 2026",
+    "author": "Dr. Zara Alvi",
+    "authorRole": "Master Esthetician & Skin Specialist",
+    "authorAvatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80",
+    "image": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1200&q=80",
+    "excerpt": "Karachi's harsh seasonal smog and coastal humidity compromise your skin's protective lipid layer, leading to micro-inflammation and premature aging. Discover how advanced peptide barrier repair restores your resilient, glass-like glow at Serene Sanctuary.",
+    "featured": true,
+    "serviceId": "srv-5",
+    "serviceName": "Serene HydraGlow Facial",
+    "content": "<p class=\"lead text-base sm:text-lg text-stone-700 leading-relaxed font-serif italic mb-6\">As Karachi transitions into the heavy smog season coupled with our signature coastal humidity, our skin's delicate microbiome faces unprecedented oxidative stress, resulting in chronic dehydration, stinging, and dullness.</p><h3 class=\"font-serif text-2xl font-bold text-stone-900 mt-6 mb-3\">How Urban Pollution Destroys Your Skin Barrier</h3><p class=\"text-stone-600 leading-relaxed mb-4\">Airborne particulate matter (PM2.5) and heavy industrial pollutants easily penetrate compromised lipid barriers, generating free radicals that break down collagen and trigger inflammatory pathways. For women living in DHA and Clifton, the combination of urban air quality and mineral-heavy municipal water strips the skin of its natural defense proteins, leaving it vulnerable to sensitivity and premature fine lines.</p><h3 class=\"font-serif text-2xl font-bold text-stone-900 mt-6 mb-3\">The Science of Advanced Peptide Infusion</h3><p class=\"text-stone-600 leading-relaxed mb-4\">To counteract urban weathering, skincare has evolved beyond surface hydration. Multi-chain peptides act as cellular messengers that signal fibroblasts to synthesize fresh elastin and repair micro-tears in the epidermal matrix. When paired with antioxidant-rich botanical infusions, peptides rebuild the lipid cement that locks essential moisture in and keeps environmental toxins out.</p><div class=\"bg-[#FDF9F7] p-6 rounded-2xl border-l-4 border-[#C59B8E] my-6\"><h4 class=\"font-serif font-bold text-stone-900 text-lg mb-1\">Expert Salon Tip from Dr. Zara Alvi:</h4><p class=\"text-stone-600 text-sm italic\">Never skip medical-grade daily SPF during Karachi's smoggy months. UV rays penetrate particulate haze, compounding oxidative stress and deepening hyperpigmentation.</p></div><h3 class=\"font-serif text-2xl font-bold text-stone-900 mt-6 mb-3\">Restore Your Radiance at Serene Sanctuary</h3><p class=\"text-stone-600 leading-relaxed mb-4\">Combat environmental fatigue with our signature Serene HydraGlow Facial, expertly designed to detoxify congested pores, infuse deep-penetrating peptides, and instantly restore a dewy, resilient complexion fit for the luxury salon experience.</p>"
+  },
+{
     "id": "peptide-barrier-repair-karachi-smog-defense",
     "slug": "peptide-barrier-repair-karachi-smog-defense",
     "title": "Peptide Barrier Repair: Defending Skin Against Karachi Coastal Smog",
